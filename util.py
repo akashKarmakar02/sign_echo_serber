@@ -3,6 +3,8 @@ import numpy as np
 import mediapipe as mp
 import pickle
 
+from PIL import Image
+
 model_dict = pickle.load(open('model.p', 'rb'))
 model = model_dict['model']
 mp_hands = mp.solutions.hands
@@ -10,6 +12,7 @@ mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 hands = mp_hands.Hands(static_image_mode=True, min_detection_confidence=0.3)
 labels = {0: 'A', 1: 'B', 2: 'L'}
+
 
 def detect_hand_gesture(image):
     frame = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
@@ -52,20 +55,20 @@ def detect_hand_gesture(image):
         if len(data_aux) < max_length:
             data_aux += [0.0] * (max_length - len(data_aux))
 
-        prediction = model.predict([np.asarray(data_aux, dtype=np.float64)])
-        character = labels[int(prediction[0])]
+        # prediction = model.predict([np.asarray(data_aux, dtype=np.float64)])
+        # character = labels[int(prediction[0])]
 
-        cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 0), 4)
-        cv2.putText(frame, character, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 1.3, (0, 0, 0), 3, cv2.LINE_AA)
+        # cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 0), 4)
+        # cv2.putText(frame, character, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 1.3, (0, 0, 0), 3, cv2.LINE_AA)
 
         return {
             "x1": x1,
-            "y1": y1, 
+            "y1": y1,
             "x2": x2,
             "y2": y2,
         }
 
-    # img = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
-    # img.save("image.jpg")
+    img = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+    img.save("image.jpg")
 
     # return x1, y1, x2, y2

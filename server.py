@@ -39,9 +39,9 @@ async def predict(websocket: WebSocket):
             # Example: Echo back the data
             for client in connected_clients:
                 try:
-                    await client.send_json(data)
-                    print(index)
-                    index += 1
+                    await client.send_json({
+                        'prediction': data,
+                    })
                 except Exception as e:
                     print(f"Error sending data to client: {e}")
                     connected_clients.remove(client)
@@ -50,4 +50,4 @@ async def predict(websocket: WebSocket):
         connected_clients.remove(websocket)
         index = 0
 
-# uvicorn.run(app=app, port=8000, host="0.0.0.0")
+uvicorn.run(app=app, port=8000, host="0.0.0.0")
